@@ -16,19 +16,12 @@ ARG AIRFLOW_VERSION=1.8.1
 ARG AIRFLOW_HOME=/usr/local/airflow
 
 # Define en_US.
-# ENV LANGUAGE en_US.UTF-8
-# ENV LANG en_US.UTF-8
-# ENV LC_ALL en_US.UTF-8
-# ENV LC_CTYPE en_US.UTF-8
-# ENV LC_MESSAGES en_US.UTF-8
-# ENV LC_ALL en_US.UTF-8
-
-ENV LANGUAGE zh_CN.UTF-8
-ENV LANG zh_CN.UTF-8
-ENV LC_ALL zh_CN.UTF-8
-ENV LC_CTYPE zh_CN.UTF-8
-ENV LC_MESSAGES zh_CN.UTF-8
-ENV LC_ALL zh_CN.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LC_CTYPE en_US.UTF-8
+ENV LC_MESSAGES en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 RUN set -ex \
     && buildDeps=' \
@@ -52,8 +45,6 @@ RUN set -ex \
         curl \
         netcat \
         locales \
-        python-mysqldb \
-        libmysqlclient-dev \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -64,7 +55,7 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
-    && pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,airflow,mysql]==$AIRFLOW_VERSION \
+    && pip install apache-airflow[crypto,celery,postgres,hive,hdfs,jdbc,airflow]==$AIRFLOW_VERSION \
     && pip install celery[redis]==3.1.17 \
     && apt-get remove --purge -yqq $buildDeps \
     && apt-get clean \
@@ -78,7 +69,6 @@ RUN set -ex \
 
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
-COPY airflow-dag-creation-manager-plugin-master/plugins ${AIRFLOW_HOME}/
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
 
